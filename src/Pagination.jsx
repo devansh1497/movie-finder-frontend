@@ -1,4 +1,5 @@
-import "./App.css";
+import "./css/App.css";
+import "./css/styles.css";
 import Pagination from "react-bootstrap/Pagination";
 
 const PaginationComponent = ({
@@ -7,9 +8,8 @@ const PaginationComponent = ({
   currPage,
   setCurrPage,
 }) => {
-
-  const THRESHOLD = 22;
-  const PAGE_LIST_SIZE_FOR_ABOVE_THRESHOLD_CONDIION = 22;
+  const THRESHOLD = 2;
+  const PAGE_LIST_SIZE_FOR_ABOVE_THRESHOLD_CONDIION = 15
   const TOTAL_PAGES = Math.ceil(totalItems / itemsPerPage);
 
   const setFixedButtons = (pages) => {
@@ -113,6 +113,7 @@ const PaginationComponent = ({
     const pages = [];
     const start = Math.max(1, currPage - THRESHOLD / 2);
     const end = Math.min(TOTAL_PAGES, currPage + THRESHOLD / 2);
+    console.log(start,end)
     for (let i = start; i <= end; i++) {
       pages.push(
         <Pagination.Item
@@ -125,7 +126,7 @@ const PaginationComponent = ({
       );
     }
     if (end - start != PAGE_LIST_SIZE_FOR_ABOVE_THRESHOLD_CONDIION) {
-      let diff = PAGE_LIST_SIZE_FOR_ABOVE_THRESHOLD_CONDIION - (end - start);
+      let diff = Math.min(8,PAGE_LIST_SIZE_FOR_ABOVE_THRESHOLD_CONDIION - (end - start));
       if (start !== 1) {
         for (let i = diff; i >= 1; i--) {
           pages.unshift(
@@ -139,7 +140,8 @@ const PaginationComponent = ({
           );
         }
       } else {
-        for (let i = TOTAL_PAGES - diff + 1; i <= TOTAL_PAGES; i++) {
+        console.log(Math.min(TOTAL_PAGES, TOTAL_PAGES+10))
+        for (let i = TOTAL_PAGES - diff + 1; i <= Math.min(TOTAL_PAGES, TOTAL_PAGES+5); i++) {
           pages.push(
             <Pagination.Item
               onClick={() => handlePageChange(i)}
@@ -155,16 +157,16 @@ const PaginationComponent = ({
     checkAndAddEllipses(pages);
     correctPrefixPageNumbersIfRequired(pages);
     correctSuffixPageNumbersIfRequired(pages);
+    console.log(pages)
     return pages;
   };
 
   const handlePageChange = (targetPage) => {
     setCurrPage(targetPage);
-    // getPagesBelowThreshold();
   };
 
   return (
-    <div style={{ marginLeft: "65px" }}>
+    <div className="page-numbers">
       <Pagination>
         {TOTAL_PAGES <= THRESHOLD
           ? getPagesBelowThreshold(TOTAL_PAGES, currPage).map((ele) => ele)

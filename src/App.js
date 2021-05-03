@@ -1,10 +1,13 @@
-import './App.css';
+import './css/App.css';
 import { useEffect, useState } from 'react';
 import { RowsData } from './RowsData';
 import LoadingOverlay from "react-loading-overlay";
 import Error from './Error';
 import DataNotFound from './DataNotFound';
 import { withRouter } from 'react-router-dom';
+import './css/utilities.css';
+import './css/styles.css';
+import FilterSideBar from './FilterSideBar';
 
 function App() {
 
@@ -24,10 +27,6 @@ function App() {
 
     const [movieFilter, setMovieFilter] = useState(initialState);
 
-    //State for a hacky way to force render this component when user clicks on "go back" in the 
-    //<DataNotFound/>. This is done because this page's useEffect was not being called as 
-    //the link doesn't change when <DataNotFound/> is being called.
-    //As a result, the link does change when the button is clicked, but the grid is not reloaded.
     const [usedReactRouter, setUsedReactRouter] = useState(false);
     const getMovies = () => {
         let queryParams = {
@@ -58,7 +57,6 @@ function App() {
     }
 
     const resetFilter = () => {
-        console.log('reset',resetFilter)
         setMovieFilter(prevState => ({
             ...prevState,
             ...initialState,
@@ -78,8 +76,8 @@ function App() {
                 throw new Error('Something went wrong...The server responsed with ', response);
             })
             .then(response => {
-                setMovies(response.movies);
-                setTotalMovies(response.totalFilteredMovies);
+                setMovies(response.content);
+                setTotalMovies(response.totalElements);
                 setIsLoading(false);
                 setIsError(false);
                 window.scrollTo(0, 0);
@@ -100,7 +98,6 @@ function App() {
     }
 
     const resetFilterToPreviousSearchedFilter = (initialState) => {
-        // console.log('initial state', initialState, movieFilter)
         setMovieFilter(prevState => ({
             ...prevState,
             ...initialState,
@@ -138,25 +135,41 @@ function App() {
     }
     return (<div className="_loading_overlay_wrapper">
         <LoadingOverlay spinner active={isLoading}>
-            <RowsData rowData={movies}
-                setMovies={setMovies}
-                getMovies={getMovies}
-                isLoading={isLoading}
-                isError={isError}
-                totalFilteredMovies={totalMovies}
-                currPage={currPage}
-                pageSize={pageSize}
-                totalFilteredMovies={totalMovies}
-                setCurrPage={setCurrPage}
-                setPageSize={setPageSize}
-                setMovieFilter={setMovieFilter}
-                movieFilter={movieFilter}
-                resetFilterToPreviousSearchedFilter={resetFilterToPreviousSearchedFilter}
-                getMoviesIfRemoveFilterButtonWasClicked={getMoviesIfRemoveFilterButtonWasClicked}
-                isResetDisabled={isResetDisabled}
-                setIsResetDisabled={setIsResetDisabled}
-                resetFilter={resetFilter}
-            />
+            <div id="main-app" className="filter py-top-5 main-app flex">
+                <section id="filter" >
+                    {<FilterSideBar movieFilter={movieFilter} setMovieFilter={setMovieFilter} setCurrPage={setCurrPage}
+                        getMovies={getMovies} resetFilter={resetFilter} setMovies={setMovies}
+                        getMovies={getMovies} isLoading={isLoading}
+                        isError={isError}
+                        movieFilter={movieFilter}
+                        setMovieFilter={setMovieFilter}
+                        resetFilterToPreviousSearchedFilter={
+                            resetFilterToPreviousSearchedFilter
+                        }
+                        setCurrPage={setCurrPage}
+                        resetFilter={resetFilter} />}
+
+                </section>
+                <RowsData rowData={movies}
+                    setMovies={setMovies}
+                    getMovies={getMovies}
+                    isLoading={isLoading}
+                    isError={isError}
+                    totalFilteredMovies={totalMovies}
+                    currPage={currPage}
+                    pageSize={pageSize}
+                    totalFilteredMovies={totalMovies}
+                    setCurrPage={setCurrPage}
+                    setPageSize={setPageSize}
+                    setMovieFilter={setMovieFilter}
+                    movieFilter={movieFilter}
+                    resetFilterToPreviousSearchedFilter={resetFilterToPreviousSearchedFilter}
+                    getMoviesIfRemoveFilterButtonWasClicked={getMoviesIfRemoveFilterButtonWasClicked}
+                    isResetDisabled={isResetDisabled}
+                    setIsResetDisabled={setIsResetDisabled}
+                    resetFilter={resetFilter}
+                />
+            </div>
         </LoadingOverlay>
     </div>
     );

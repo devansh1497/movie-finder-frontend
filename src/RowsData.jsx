@@ -1,13 +1,14 @@
 import React, { useState } from "react";
-import "./App.css";
+import "./css/App.css";
 import { FilterDialog } from "./FilterDialog";
 import Button from "react-bootstrap/Button";
 import Pagination from "./Pagination";
-import ClipboardIcon from "react-clipboard-icon";
 import _ from "lodash";
+import Card from "./Card.jsx";
+import './css/utilities.css';
 export const RowsData = (props) => {
   const [isFilterOpen, setFilterOpen] = useState(false);
-  const [isCopied, setIsCopied] = useState({});
+
   const {
     setMovies,
     getMovies,
@@ -24,19 +25,23 @@ export const RowsData = (props) => {
     getMoviesIfRemoveFilterButtonWasClicked,
     setIsResetDisabled,
     isResetDisabled,
-    resetFilter
+    resetFilter,
   } = props;
 
   const toggleDialogFilter = () => {
+    if(!isFilterOpen){
+      console.log('setting to hidden', isFilterOpen)
+      document.getElementById('main-app').style.overflow = 'hidden';
+    }
+    else{
+      document.getElementById('main-app').style.overflow = 'auto';
+
+    }
     setFilterOpen((prevValue) => !prevValue);
   };
 
   const handleClose = () => {
     setFilterOpen(false);
-  };
-
-  const getClassName = (index) => {
-    return `movie-row movie-row-${index % 4}`;
   };
 
   const findStartAndEndResultNumbers = () => {
@@ -49,177 +54,47 @@ export const RowsData = (props) => {
     window.scrollTo(0, 0);
   };
 
-  const searchMovie = (event) => {
-    const isTextSelected = window.getSelection().toString();
-    //Make search onlt if the text was clicked and NOT selected.
-    if (!isTextSelected) {
-      const movieName = event.target.textContent;
-      const url = "http://www.google.com/search?q=" + movieName + " movie";
-      window.open(url, "_blank");
-    }
-  };
-
-  const copyToClipboard = (movieName) => {
-    var input = document.createElement("input");
-    input.setAttribute("value", movieName);
-    document.body.appendChild(input);
-    input.select();
-    var result = document.execCommand("copy");
-    document.body.removeChild(input);
-    return result;
-  };
-
   const removeAllFilters = () => {
     setIsResetDisabled(true);
-    setMovieFilter(prevState => ({
-        ...prevState,
-        genres: [],
-        platforms: [],
-        rating: "",
-        year: ""
-    }))
+    setMovieFilter((prevState) => ({
+      ...prevState,
+      genres: [],
+      platforms: [],
+      rating: "",
+      year: "",
+    }));
     getMoviesIfRemoveFilterButtonWasClicked();
   };
 
-
-  const concatenateList = (list) => {
-    if (list.length === 0) {
-      return "Not available";
-    }
-    const listValues = list.map((value) => value.name);
-    return listValues.join(", ");
-  };
-
-  const getResultData = (movie, index) => {
-    return (
-      <div
-        id={`movie-${index}`}
-        style={{
-          display: "grid",
-          gridTemplateRows: "1fr 1fr",
-          alignItems: "right",
-        }}
-      >
-        <div style={{ textAlign: "center" }}>
-          <strong
-            className="movie-name"
-            style={{
-              maxWidth: "200px",
-              marginLeft: "40px",
-            }}
-            onClick={searchMovie}
-          >
-            {movie.movieName}
-          </strong>
-          <label
-            style={{
-              fontWeight: "normal",
-              marginRight: "5px",
-              display: "inline-block",
-            }}
-          >
-            ({movie.year})
-          </label>
-          <ClipboardIcon
-            onClick={(event) => handleCopy(event, index)}
-            title={"Copy movie name to clipboard"}
-            className
-          />
-          {isCopied[index] && (
-            <div
-              style={{
-                display: "inline",
-                backgroundColor: "rgba(74,227,123,1)",
-              }}
-            >
-              <label style={{ color: "black", margin: "2px" }}>Copied!</label>
-            </div>
-          )}
-          <div style={{ display: "inline" }}>
-            <label style={{ marginLeft: "40px" }}>
-              <strong>IMdb Rating: </strong>
-            </label>
-            <span>{movie.rating}</span>
-          </div>
-          <div style={{ display: "inline" }}>
-            <label>
-              <strong style={{ marginLeft: "40px" }}>Genres: </strong>
-            </label>
-            {/* {movie.genres.forEach((genre, index) => {
-                        <span key={index}>{genre.name}</span>
-                    })} */}
-            <span>{concatenateList(movie.genres)}</span>
-            {/* <span>{movie.genre}</span> */}
-          </div>
-          <div style={{ display: "inline" }}>
-            <strong style={{ marginLeft: "40px" }}>Platforms: </strong>
-            <label>{concatenateList(movie.platforms)}</label>
-          </div>
-        </div>
-        <div style={{ textAlign: "center" }}>{movie.description}</div>
-      </div>
-    );
-  };
+  const getRow = (movie, index) => (
+    <Card classname="card" movie={movie} index={index} />
+  );
 
   const getButtons = () => {
     return (
-      <>
-        <Button
+      <div className="flex-wrap topbar-buttons">
+         <Button
           id="filter-button"
-          className="btn-primary"
+          className="btn-primary button"
           onClick={toggleDialogFilter}
-          style={{
-            alignContent: "center",
-          }}
+          
         >
-          <label style={{ fontFamily: "serif", marginBottom: "0px" }}>
-            Show Filters
+          <label style={{ fontFamily: "serif", marginBottom: "0px", letterSpacing: '1px' }}>
+            FILTERS
           </label>
-        </Button>
-        <Button
+        </Button> 
+         <Button
           id="filter-button"
-          className="btn-danger"
+          className="btn-danger button"
           onClick={removeAllFilters}
-          style={{
-            marginLeft: "10px",
-            alignContent: "center",
-          }}
           disabled={isResetDisabled}
         >
-          <label style={{ fontFamily: "serif", marginBottom: "0px" }}>
-            Remove all Filters
+          <label style={{ fontFamily: "serif", marginBottom: "0px" ,letterSpacing: '1px'}}>
+            REMOVE ALL
           </label>
-        </Button>
-        <label style={{ paddingLeft: "10px", display: "inline-block" }}>
-          Showing <strong>{findStartAndEndResultNumbers()[0]}</strong> -{" "}
-          <strong>{findStartAndEndResultNumbers()[1]}</strong> of{" "}
-          <strong>{totalFilteredMovies} </strong>
-          results
-          {/* <div style={{marginLeft: '30px'}}> */}
-          {/* <Button className="btn-secondary btn-sm" style={{marginLeft: '160px'}} onClick={handleGoToBottom}>Go to the bottom</Button> */}
-          {/* </div> */}
-        </label>
-      </>
+         </Button> 
+      </div>
     );
-  };
-
-  const handleCopy = (event, index) => {
-    const movieRow = document.getElementById(`movie-${index}`);
-    const strongTag = movieRow.getElementsByClassName("movie-name")[0];
-    if (strongTag) {
-      const movieName = strongTag.innerText;
-      copyToClipboard(movieName);
-      setIsCopied((prevState) => ({
-        ...prevState,
-        [index]: true,
-      }));
-      setTimeout(() => {
-        setIsCopied((prevState) => ({
-          ...prevState,
-          [index]: false,
-        }));
-      }, 3000);
-    }
   };
 
   const handleDropdownChange = (event) => {
@@ -227,8 +102,9 @@ export const RowsData = (props) => {
   };
   if (props.rowData.length) {
     return (
-      <div id="screen">
-        <div className="movie-app" style={{ marginTop: "10px" }}>
+      <div id="row-data" className="data-section" style={{width: '60vw', margin: '0 auto'}}>
+        <div className="container py-3">
+          <div className='filter-view'>
           {isFilterOpen && (
             <FilterDialog
               handleClose={handleClose}
@@ -239,25 +115,27 @@ export const RowsData = (props) => {
               isError={isError}
               movieFilter={movieFilter}
               setMovieFilter={setMovieFilter}
-              resetFilterToPreviousSearchedFilter={resetFilterToPreviousSearchedFilter}
+              resetFilterToPreviousSearchedFilter={
+                resetFilterToPreviousSearchedFilter
+              }
               setCurrPage={setCurrPage}
               resetFilter={resetFilter}
             />
           )}
-          <div style={{ display: "inline-block" }}>
-            <div style={{ float: "left", marginLeft: "5px" }}>
-              {/* <div style={{ display: "flex", justifyContent: "center" }}>
-              {getSwitches()}
-            </div> */}
-              {getButtons()}
-              <select
-                onChange={handleDropdownChange}
-                style={{
-                  marginLeft: "430px",
-                  maxHeight: "25px",
-                  display: "inline",
-                }}
-              >
+          </div>
+
+          <div className="flex px-half">
+            {getButtons()}
+            <div>
+            <label style={{ paddingLeft: "10px", display: "inline-block" }}>
+              Showing <strong>{findStartAndEndResultNumbers()[0]}</strong> -{" "}
+              <strong>{findStartAndEndResultNumbers()[1]}</strong> of{" "}
+              <strong>{totalFilteredMovies} </strong>
+              results
+            </label>
+            </div>
+            <div className="flex-end dropdown">
+              <select onChange={handleDropdownChange}>
                 <option key={0} value={10} selected={pageSize === "10"}>
                   {pageSize === "10"
                     ? "Showing 10 results per page"
@@ -280,28 +158,17 @@ export const RowsData = (props) => {
                 </option>
               </select>
             </div>
+            {/* <hr/> */}
           </div>
-          {props.rowData.map((movie, index) => {
-            return (
-              <div
-                className={getClassName(index)}
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "10% 90%",
-                  alignItems: "center",
-                  border: "5px solid white",
-                }}
-              >
-                <div style={{ border: "5px solid transparent" }}>
-                  <img src={movie.imageLink} alt={movie.movieName} />
-                </div>
-                <div style={{ textAlign: "left" }}>
-                  {getResultData(movie, index)}
-                </div>
-              </div>
-            );
-          })}
-          <div>
+
+          <div className="rows px-half">
+            {props.rowData.map((movie, index) => {
+              return getRow(movie, index);
+            })}
+          </div>
+          </div>
+          <section className="pagination">
+          <div className="py-top-half flex flex-column all-center">
             <Pagination
               itemsPerPage={pageSize}
               currPage={currPage}
@@ -311,15 +178,16 @@ export const RowsData = (props) => {
               setCurrPage={setCurrPage}
             />
             <Button
-              className="btn-sm btn-secondary"
+              className="button btn-sm btn-secondary"
               style={{ display: "inline" }}
               onClick={handleGoToTop}
             >
               Go to the top
             </Button>
           </div>
+          </section>
         </div>
-      </div>
+      // </div>
     );
   } else {
     return null;

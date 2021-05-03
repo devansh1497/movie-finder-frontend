@@ -7,7 +7,6 @@ const Error = () => {
             <p style={{fontWeight: 'bold', zoom: '100%'}}>Something went wrong. Please try again.</p>
             <p>Please consider reporting this issue to <strong>Devansh Singh</strong> on <strong>devanshsingh1997@gmail.com</strong> if it persists.</p>
         </label>
-        {/* <Button variant="link">Go back</Button> */}
         </>)
 }
  

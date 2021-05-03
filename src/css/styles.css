@@ -1,0 +1,164 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap");
+
+:root {
+  --card-color1: linear-gradient(
+    90deg,
+    rgba(93, 12, 255, 1) 0%,
+    rgba(155, 0, 250, 1) 100%
+  );
+  --card-color2: linear-gradient(
+    90deg,
+    rgba(255, 12, 241, 1) 0%,
+    rgba(250, 0, 135, 1) 100%
+  );
+  --card-color3: linear-gradient(
+    90deg,
+    rgba(20, 159, 255, 1) 0%,
+    rgba(17, 122, 255, 1) 100%
+  );
+  --card-color4: linear-gradient(
+    90deg,
+    rgba(255, 118, 20, 1) 0%,
+    rgba(255, 84, 17, 1) 100%
+  );
+}
+
+.filter-side-bar {
+  height: min-content;
+  background-color: white;
+  padding: 1rem;
+  font-family: "Lato", sans-serif;
+}
+
+.filter-heading {
+  margin-bottom: 2rem;
+}
+
+.rows > *:nth-child(4n + 1) {
+  background: var(--card-color1);
+}
+
+.rows > *:nth-child(4n + 2) {
+  background: var(--card-color2);
+}
+
+.rows > *:nth-child(4n + 3) {
+  background: var(--card-color3);
+}
+
+.rows > *:nth-child(4n + 4) {
+  background: var(--card-color4);
+}
+
+.icon {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  justify-self: left;
+  margin: auto 0;
+  padding-left: 10px;
+}
+
+.copy-icon {
+  display: inline;
+  margin-left: 5px;
+  /* background-color: rgba(74,227,123,1); */
+}
+
+.copy-item label {
+  font-weight: normal;
+}
+
+.description {
+  grid-column: 2 / span 7;
+}
+
+.value {
+  font-weight: normal;
+}
+
+.page-numbers {
+  max-width: 100%;
+  overflow-wrap: break-word;
+}
+
+.topbar-buttons {
+  display: none;
+}
+
+/* Media queries */
+@media (max-width: 1030px) {
+  /* .topbar {
+        flex-direction: column;
+        margin: 0 !important;
+    }
+    .dropdown {
+        margin: 0;
+    } */
+  html {
+    font-size: 75%;
+  }
+
+  .main-app {
+    padding: 0 0;
+  }
+
+  .data-section {
+    width: 100vw !important;
+    padding: 1rem;
+  }
+
+  .filter-side-bar {
+    display: none;
+  }
+
+  .filter-view {
+    display: flex;
+    justify-content: center;
+  }
+
+  .topbar-buttons {
+    display: inline-block;
+    order: 2;
+  }
+
+  .show-filter {
+    display: none;
+  }
+
+  .flex.px-half {
+    flex-wrap: wrap;
+  }
+
+  .flex-end.dropdown {
+    margin: 0 0 3px 0;
+  }
+
+  .pagination {
+    width: 100%;
+  }
+
+  .card-grid.grid {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    text-align: center;
+    flex-wrap: wrap;
+  }
+
+  hr {
+    width: 100%;
+    height: 0;
+    margin: 0;
+    border: none !important;
+  }
+
+  .container .flex.px-half {
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+  }
+
+  .container .flex.px-half button {
+    margin: 5px;
+}
+}

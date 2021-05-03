@@ -52,7 +52,7 @@
     width: 100px;
 }
 
-.movie-row-1 {
+/* .movie-row-1 {
     background: linear-gradient( 90deg, rgba(93, 12, 255, 1) 0%, rgba(155, 0, 250, 1) 100%);
 }
 
@@ -66,7 +66,7 @@
 
 .movie-row-0 {
     background: linear-gradient( 90deg, rgba(255, 118, 20, 1) 0%, rgba(255, 84, 17, 1) 100%);
-}
+} */
 
 .movie-row {
     /* display: flex;
